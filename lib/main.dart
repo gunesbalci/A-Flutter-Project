@@ -3,20 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/foundation.dart';
 
 import 'theme_provider.dart';
-import 'todo_homepage.dart';
 import 'notification_service.dart';
+import 'todo_item.dart';
+import 'todo_list.dart';
+import 'todo_lists_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  debugPrint('A: Başlangıç');
 
-  await requestNotificationPermission();
+  if (!kIsWeb) {
+    await requestNotificationPermission();
+    debugPrint('B: Bildirim izni alındı');
 
-  await NotificationService().init();
+    await NotificationService().init();
+    debugPrint('C: Bildirim servisi başlatıldı');
+  }
   await Hive.initFlutter();
+  debugPrint('D: Hive başlatıldı');
+
   Hive.registerAdapter(TodoItemAdapter());
-  await Hive.openBox<TodoItem>('todos');
+  Hive.registerAdapter(TodoListAdapter());
+  await Hive.openBox<TodoItem>('todo_items');
+  await Hive.openBox<TodoList>('todo_lists');
+  debugPrint('e: Hive başlatıldı');
 
   runApp(
     ChangeNotifierProvider(
@@ -34,12 +47,12 @@ class TodoApp extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return MaterialApp(
-      title: 'Tema Ayarı',
+      title: 'Görev Listeleri',
       debugShowCheckedModeBanner: false,
       themeMode: themeProvider.themeMode,
       theme: ThemeData.light().copyWith(colorScheme: myLightScheme),
       darkTheme: ThemeData.dark().copyWith(colorScheme: myDarkScheme),
-      home: const TodoHomePage(),
+      home: const TodoListsPage(),
     );
   }
 }

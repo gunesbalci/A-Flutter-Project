@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -8,24 +9,26 @@ class NotificationService {
 
   final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  Timer? _timer;
+
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   Future<void> init() async {
+    // Bildirimleri başlat
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const initSettings = InitializationSettings(android: androidSettings);
     await _notificationsPlugin.initialize(initSettings);
 
-    _startPeriodicNotifications();
-  }
+    // Bağlantı durumunu dinle
 
-  void _startPeriodicNotifications() {
-    _timer?.cancel(); // Eğer daha önce başlatılmışsa iptal et
-    _timer = Timer.periodic(const Duration(seconds: 5), (_) {
-      showNotification(
-        id: 0,
-        title: 'Hatırlatma',
-        body: '3 dakika geçti!',
-      );
+
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((results) {
+      if (results.contains(ConnectivityResult.none)) {
+        showNotification(
+          id: 0,
+          title: 'İnternet Bağlantısı Yok',
+          body: 'Lütfen bağlantınızı kontrol edin.',
+        );
+      }
     });
   }
 
@@ -35,8 +38,8 @@ class NotificationService {
     required String body,
   }) async {
     const androidDetails = AndroidNotificationDetails(
-      'channel_id',
-      'channel_name',
+      'net_channel',
+      'Ağ Bildirimleri',
       importance: Importance.high,
       priority: Priority.high,
     );
@@ -45,6 +48,6 @@ class NotificationService {
   }
 
   void dispose() {
-    _timer?.cancel();
+    _connectivitySubscription?.cancel();
   }
 }

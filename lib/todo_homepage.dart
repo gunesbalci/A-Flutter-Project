@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'settings_page.dart';
+import 'intent_url_launcher.dart';
+import 'notification_service.dart';
 
 part 'todo_homepage.g.dart';  // hive için gerekli
 
@@ -136,15 +138,7 @@ class _TodoHomePageState extends State<TodoHomePage> {
                 final item = _items[index];
                 return ListTile
                 (
-                  title: Text
-                  (
-                    item.task,
-                    style: TextStyle
-                    (
-                      decoration:
-                        item.isDone ? TextDecoration.lineThrough : null,
-                    ),
-                  ),
+                  title: intentUrlLauncher(item.task, item.isDone),
                   leading: Checkbox
                   (
                     value: item.isDone,
@@ -176,10 +170,9 @@ class _TodoHomePageState extends State<TodoHomePage> {
 
   @override
   void dispose() {
-    _controller.dispose(); // Bellek sızıntısını engeller
+    _controller.dispose();
+    NotificationService().dispose(); 
     super.dispose();
   }
 }
-
-
-
+*/
