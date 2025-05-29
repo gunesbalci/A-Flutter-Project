@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Widget intentUrlLauncher(String text, bool isDone) {
+  String cleanedText = text.replaceAll(RegExp(r'[\s-]'), '');
   final urlRegex = RegExp(r'^(https?:\/\/[^\s]+)$');
   final phoneRegex = RegExp(r'^\+?[0-9]{10,15}$');
 
@@ -22,10 +23,10 @@ Widget intentUrlLauncher(String text, bool isDone) {
       ),
     );
   } 
-  else if (phoneRegex.hasMatch(text)) 
+  else if (phoneRegex.hasMatch(cleanedText)) 
   {
     return GestureDetector(
-      onTap: () => launchUrl(Uri.parse('tel:$text')),
+      onTap: () => launchUrl(Uri.parse('tel:$cleanedText')),
       child: Text(
         text,
         style: style.copyWith(color: Colors.green, decoration: TextDecoration.combine([

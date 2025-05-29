@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 
 import 'todo_list.dart';
 import 'todo_item.dart';
+import 'intent_url_launcher.dart';
 
 class TodoListDetailPage extends StatefulWidget {
   final int listKey;
@@ -96,13 +97,7 @@ class _TodoListDetailPageState extends State<TodoListDetailPage> {
               itemBuilder: (context, index) {
                 final item = list.items![index];
                 return ListTile(
-                  title: Text(
-                    item.task,
-                    style: TextStyle(
-                      decoration:
-                          item.isDone ? TextDecoration.lineThrough : null,
-                    ),
-                  ),
+                  title: intentUrlLauncher(item.task, item.isDone),
                   leading: Checkbox(
                     value: item.isDone,
                     onChanged: (_) => _toggleDone(index),

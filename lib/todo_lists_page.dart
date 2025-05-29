@@ -105,11 +105,15 @@ class _TodoListsPageState extends State<TodoListsPage> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              final result = await Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const SettingsPage()),
               );
+
+              if (result == true) {
+                setState(() {});  // Hive verisi güncellenmiş, yeniden build et
+              }
             },
             child: const Text('Ayarlar'),
           )

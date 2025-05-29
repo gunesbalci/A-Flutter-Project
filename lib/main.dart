@@ -13,17 +13,13 @@ import 'todo_lists_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  debugPrint('A: Başlangıç');
 
   if (!kIsWeb) {
     await requestNotificationPermission();
-    debugPrint('B: Bildirim izni alındı');
 
     await NotificationService().init();
-    debugPrint('C: Bildirim servisi başlatıldı');
   }
   await Hive.initFlutter();
-  debugPrint('D: Hive başlatıldı');
 
   Hive.registerAdapter(TodoItemAdapter());
   Hive.registerAdapter(TodoListAdapter());
